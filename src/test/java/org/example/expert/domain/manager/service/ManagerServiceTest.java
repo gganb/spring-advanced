@@ -12,6 +12,7 @@ import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.example.expert.domain.user.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,24 +40,28 @@ class ManagerServiceTest {
     private ManagerService managerService;
 
     @Test
-    public void manager_목록_조회_시_Todo가_없다면_NPE_에러를_던진다() {
+    @DisplayName("목록 조회시 Todo가 없다면 invalidException을 던진다")
+    public void manager_InvalidRequestException() {
         // given
         long todoId = 1L;
         given(todoRepository.findById(todoId)).willReturn(Optional.empty());
 
         // when & then
         InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> managerService.getManagers(todoId));
-        assertEquals("Manager not found", exception.getMessage());
+        assertEquals("Todo not found", exception.getMessage());
     }
 
     @Test
-    void todo의_user가_null인_경우_예외가_발생한다() {
+    @DisplayName("todo의 user가 null인 경우 예외가 발생한다.")
+    void todo_user_not_exist() {
         // given
+        //작성자 user
         AuthUser authUser = new AuthUser(1L, "a@a.com", UserRole.USER);
         long todoId = 1L;
         long managerUserId = 2L;
 
         Todo todo = new Todo();
+
         ReflectionTestUtils.setField(todo, "user", null);
 
         ManagerSaveRequest managerSaveRequest = new ManagerSaveRequest(managerUserId);
@@ -72,7 +77,8 @@ class ManagerServiceTest {
     }
 
     @Test // 테스트코드 샘플
-    public void manager_목록_조회에_성공한다() {
+    @DisplayName("목록 조회에 성공한다")
+    public void manager_findAll_ok() {
         // given
         long todoId = 1L;
         User user = new User("user1@example.com", "password", UserRole.USER);
@@ -94,8 +100,9 @@ class ManagerServiceTest {
         assertEquals(mockManager.getUser().getEmail(), managerResponses.get(0).getUser().getEmail());
     }
 
-    @Test // 테스트코드 샘플
-    void todo가_정상적으로_등록된다() {
+    @Test// 테스트코드 샘플
+    @DisplayName("todo가 정상적으로 등록된다")
+    void todo_save_ok() {
         // given
         AuthUser authUser = new AuthUser(1L, "a@a.com", UserRole.USER);
         User user = User.fromAuthUser(authUser);  // 일정을 만든 유저
