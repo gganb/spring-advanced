@@ -1,11 +1,13 @@
 package org.example.expert.config;
 
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 class PasswordEncoderTest {
@@ -13,16 +15,21 @@ class PasswordEncoderTest {
     @InjectMocks
     private PasswordEncoder passwordEncoder;
 
+    // 예상대로 성공했는지
     @Test
-    void matches_메서드가_정상적으로_동작한다() {
+    @DisplayName("메서드가 정상적으로 동작한다")
+    void matches_ok() {
         // given
         String rawPassword = "testPassword";
         String encodedPassword = passwordEncoder.encode(rawPassword);
 
         // when
-        boolean matches = passwordEncoder.matches(encodedPassword, rawPassword);
+        boolean matches = passwordEncoder.matches(rawPassword, encodedPassword);
 
         // then
-        assertTrue(matches);
+        assertThat(matches).isTrue();
+
     }
+
+
 }
