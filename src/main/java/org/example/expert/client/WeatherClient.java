@@ -1,5 +1,6 @@
 package org.example.expert.client;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.expert.client.dto.WeatherDto;
 import org.example.expert.domain.common.exception.ServerException;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Component
+@Slf4j
 public class WeatherClient {
 
     private final RestTemplate restTemplate;
@@ -25,16 +27,25 @@ public class WeatherClient {
     public String getTodayWeather() {
         ResponseEntity<WeatherDto[]> responseEntity =
                 restTemplate.getForEntity(buildWeatherApiUri(), WeatherDto[].class);
-
+        // json -> 객체 변환해 저장해줌
         WeatherDto[] weatherArray = responseEntity.getBody();
+
+        //TODO: else 문 제거할때 더 좋은 방식이 있는지 생각해보기
+        if (weatherArray == null || weatherArray.length == 0) {
+            throw new ServerException("날씨 데이터가 없습니다.");
+        }
         if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
             throw new ServerException("날씨 데이터를 가져오는데 실패했습니다. 상태 코드: " + responseEntity.getStatusCode());
-        } else {
-            if (weatherArray == null || weatherArray.length == 0) {
-                throw new ServerException("날씨 데이터가 없습니다.");
-            }
         }
 
+//        WeatherDto[] weatherArray = responseEntity.getBody();
+//        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+//            throw new ServerException("날씨 데이터를 가져오는데 실패했습니다. 상태 코드: " + responseEntity.getStatusCode());
+//        } else {
+//            if (weatherArray == null || weatherArray.length == 0) {
+//                throw new ServerException("날씨 데이터가 없습니다.");
+//            }
+//        }
         String today = getCurrentDate();
 
         for (WeatherDto weatherDto : weatherArray) {
