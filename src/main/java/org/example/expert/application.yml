@@ -19,3 +19,7 @@ spring:
 
 jwt:
   secret: ${jwt.secret.key}
+
+logging:
+    level:
+      root: info
