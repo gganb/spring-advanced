@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.example.expert.domain.comment.entity.Comment;
 import org.example.expert.domain.common.entity.Timestamped;
 import org.example.expert.domain.manager.entity.Manager;
-import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.user.entity.User;
 
 import java.util.ArrayList;
@@ -42,11 +41,6 @@ public class Todo extends Timestamped {
         this.weather = weather;
         this.user = user;
         this.managers.add(new Manager(user, this));
-    }
-
-    public void update(String title, String contents) {
-        this.title = title;
-        this.contents = contents;
     }
 
     public static Todo create(String title, String contents, String weather, User user) {

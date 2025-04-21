@@ -18,8 +18,6 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     @EntityGraph(attributePaths = {"user"})
     Optional<Todo> findById(@Param("todoId") Long todoId);
 
-    int countById(Long todoId);
-
     default Todo findByIdOrElseThrow(long todoId) {
         return findById(todoId).orElseThrow(
                 () -> new InvalidRequestException("Todo not found")
