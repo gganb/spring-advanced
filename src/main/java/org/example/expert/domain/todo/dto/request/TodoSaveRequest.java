@@ -13,4 +13,9 @@ public class TodoSaveRequest {
     @NotBlank
     private String contents;
 
+    public TodoSaveRequest(String title, String contents) {
+        this.title = title;
+        this.contents = contents;
+    }
+
 }
