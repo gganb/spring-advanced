@@ -30,7 +30,6 @@ public class WeatherClient {
         // json -> 객체 변환해 저장해줌
         WeatherDto[] weatherArray = responseEntity.getBody();
 
-        //TODO: else 문 제거할때 더 좋은 방식이 있는지 생각해보기
         if (weatherArray == null || weatherArray.length == 0) {
             throw new ServerException("날씨 데이터가 없습니다.");
         }
@@ -38,14 +37,6 @@ public class WeatherClient {
             throw new ServerException("날씨 데이터를 가져오는데 실패했습니다. 상태 코드: " + responseEntity.getStatusCode());
         }
 
-//        WeatherDto[] weatherArray = responseEntity.getBody();
-//        if (!HttpStatus.OK.equals(responseEntity.getStatusCode())) {
-//            throw new ServerException("날씨 데이터를 가져오는데 실패했습니다. 상태 코드: " + responseEntity.getStatusCode());
-//        } else {
-//            if (weatherArray == null || weatherArray.length == 0) {
-//                throw new ServerException("날씨 데이터가 없습니다.");
-//            }
-//        }
         String today = getCurrentDate();
 
         for (WeatherDto weatherDto : weatherArray) {
