@@ -26,20 +26,19 @@ public class AuthService {
     @Transactional
     public SignupResponse signup(SignupRequest signupRequest) {
 
-        // 1. 아래 if문 리팩토링해 passwordEncoder의 encode() 동작이 불필요하게 일어나지 않도록 하기
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             throw new InvalidRequestException("이미 존재하는 이메일입니다.");
         }
-        
+
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
 
         UserRole userRole = UserRole.of(signupRequest.getUserRole());
 
-        User newUser = new User(
-                signupRequest.getEmail(),
+        // 정적팩토리 메서드를 사용해 protected 유지
+        User newUser = User.of(signupRequest.getEmail(),
                 encodedPassword,
-                userRole
-        );
+                userRole);
+
         User savedUser = userRepository.save(newUser);
 
         String bearerToken = jwtUtil.createToken(savedUser.getId(), savedUser.getEmail(), userRole);
