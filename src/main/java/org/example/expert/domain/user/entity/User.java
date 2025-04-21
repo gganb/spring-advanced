@@ -1,6 +1,7 @@
 package org.example.expert.domain.user.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.expert.domain.common.dto.AuthUser;
@@ -9,11 +10,12 @@ import org.example.expert.domain.user.enums.UserRole;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)  // 생성자 레벨을 protected로 설정해 객체 생성을 막음
 @Table(name = "users")
 public class User extends Timestamped {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
     private String email;
@@ -31,6 +33,10 @@ public class User extends Timestamped {
         this.id = id;
         this.email = email;
         this.userRole = userRole;
+    }
+
+    public static User of(String email, String encodedPassword, UserRole userRole) {
+        return new User(email, encodedPassword, userRole);
     }
 
     public static User fromAuthUser(AuthUser authUser) {
