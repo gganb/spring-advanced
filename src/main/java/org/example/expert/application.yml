@@ -21,5 +21,6 @@ jwt:
   secret: ${jwt.secret.key}
 
 logging:
-    level:
-      root: info
+  level:
+    org.hibernate.SQL: debug        # 실행되는 SQL 출력
+    org.hibernate.type.descriptor.sql: trace  # 바인딩되는 파라미터까지 출력
