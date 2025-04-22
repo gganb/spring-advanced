@@ -17,6 +17,7 @@ public class AuthController {
 
     private final AuthService authService;
 
+    // ResponseEntity 사용 안하는 이유?
     @PostMapping("/auth/signup")
     public SignupResponse signup(@Valid @RequestBody SignupRequest signupRequest) {
         return authService.signup(signupRequest);
